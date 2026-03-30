@@ -32,7 +32,8 @@ if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("p
         .Replace("postgres://", "http://");
     var uri = new Uri(normalized);
     var userInfo = uri.UserInfo.Split(':');
-    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={Uri.UnescapeDataString(userInfo[1])};SSL Mode=Require;Trust Server Certificate=true";
+    var dbPort = uri.Port is 80 or 443 or -1 ? 5432 : uri.Port;
+    connectionString = $"Host={uri.Host};Port={dbPort};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={Uri.UnescapeDataString(userInfo[1])};SSL Mode=Require;Trust Server Certificate=true";
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
