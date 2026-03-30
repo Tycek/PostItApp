@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: postit-api
+    env: docker
+    dockerfilePath: ./Backend/PostIt/Dockerfile
+    dockerContext: ./Backend/PostIt
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: postit-db
+          property: connectionString
+      - key: Jwt__Secret
+        generateValue: true
+      - key: Jwt__Issuer
+        sync: false   # Set to your Render API URL after deploy
+      - key: Jwt__Audience
+        sync: false   # Set to your Render API URL after deploy
+      - key: OAuth2__Google__ClientId
+        sync: false
+      - key: OAuth2__Google__ClientSecret
+        sync: false
+      - key: OAuth2__Microsoft__ClientId
+        sync: false
+      - key: OAuth2__Microsoft__ClientSecret
+        sync: false
+      - key: Frontend__Url
+        sync: false   # Set to your frontend Render URL after deploy
+
+databases:
+  - name: postit-db
+    databaseName: postit
+    user: postit_user
+    plan: free
