@@ -16,10 +16,11 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://+:{port}");
 
 // ── Database ─────────────────────────────────────────────────────────────────
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? Environment.GetEnvironmentVariable("DATABASE_URL");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(connectionString))
+    connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
 
-if (connectionString is null)
+if (string.IsNullOrEmpty(connectionString))
     throw new InvalidOperationException("No database connection string configured.");
 
 // Render provides a postgres:// URL — convert to Npgsql format
