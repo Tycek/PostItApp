@@ -24,11 +24,15 @@ if (string.IsNullOrEmpty(connectionString))
     throw new InvalidOperationException("No database connection string configured.");
 
 // Render provides a postgres:// URL — convert to Npgsql format
+// Uri doesn't recognise the postgres:// scheme, so swap to http:// just for parsing
 if (connectionString.StartsWith("postgres://") || connectionString.StartsWith("postgresql://"))
 {
-    var uri = new Uri(connectionString);
+    var normalized = connectionString
+        .Replace("postgresql://", "http://")
+        .Replace("postgres://", "http://");
+    var uri = new Uri(normalized);
     var userInfo = uri.UserInfo.Split(':');
-    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={Uri.UnescapeDataString(userInfo[1])};SSL Mode=Require;Trust Server Certificate=true";
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
