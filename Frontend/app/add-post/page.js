@@ -1,23 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import DOMPurify from 'dompurify';
 import RichTextEditor from './editor';
+import { useAuth } from '../AuthContext';
 import './add-post.css';
 
 export default function AddPost() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+
+  useEffect(() => {
+    if (user === null) {
+      router.replace('/login');
+    }
+  }, [user, router]);
+
+  if (!user) {
+    return null;
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     alert(`Post submitted:\nTitle: ${title}\nContent length: ${content.length} chars\n\nImages are embedded in the content.`);
   };
 
+  const sanitizedContent = typeof window !== 'undefined' ? DOMPurify.sanitize(content) : content;
+
   return (
     <div className="add-post-container">
       <h1 className="page-title">Create New Post</h1>
-      
+
       <form onSubmit={handleSubmit} className="add-post-form">
         <div className="form-header">
           <div className="form-group title-group">
@@ -51,9 +68,9 @@ export default function AddPost() {
               <div className="preview-content">
                 {title && <h2 className="preview-title">{title}</h2>}
                 {content ? (
-                  <div 
+                  <div
                     className="preview-text"
-                    dangerouslySetInnerHTML={{ __html: content }}
+                    dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                   />
                 ) : (
                   <p className="preview-placeholder">Your post preview will appear here...</p>

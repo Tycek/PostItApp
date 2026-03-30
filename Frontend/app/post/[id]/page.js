@@ -94,7 +94,7 @@ export default function PostDetail({ params }) {
     if (!newComment.trim() || !user) return;
 
     const comment = {
-      id: comments.length + 1,
+      id: crypto.randomUUID(),
       author: user.email,
       date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
       text: newComment,
