@@ -5,24 +5,48 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../AuthContext';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // mock login - normally you'd call your backend here
-    login({ email });
-    router.push('/profile');
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      console.log('Login response status:', res);
+      if (!res.ok) {
+        setError('Invalid email or password.');
+        return;
+      }
+
+      const data = await res.json();
+      login(data);
+      router.push('/profile');
+    } catch {
+      setError('Could not connect to server. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="form-wrapper">
       <div className="card">
         <h1 className="page-title">Login</h1>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
@@ -48,8 +72,10 @@ export default function Login() {
             />
           </div>
 
-          <button type="submit" className="btn" style={{ width: '100%' }}>
-            Login
+          {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+
+          <button type="submit" className="btn" style={{ width: '100%' }} disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 

@@ -145,3 +145,12 @@ textarea {
 .link:hover {
   text-decoration: underline;
 }
+
+/* Landing page post preview — clamp height so long posts don't blow out the card */
+.post-content-preview {
+  color: #555;
+  line-height: 1.6;
+  max-height: 6rem;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}

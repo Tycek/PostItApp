@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: heslo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/18/main
+    networks:
+      - postit
+
+  pgadmin:
+    image: elestio/pgadmin
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: heslo
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - postit
+
+volumes:
+  postgres_data:
+
+networks:
+  postit:
+    driver: bridge

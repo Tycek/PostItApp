@@ -11,9 +11,10 @@ using PostIt.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Listen on Render's PORT env var
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://+:{port}");
+// Listen on Render's PORT env var (only override when explicitly set; locally launchSettings controls ports)
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+    builder.WebHost.UseUrls($"http://+:{port}");
 
 // ── Database ─────────────────────────────────────────────────────────────────
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

@@ -29,7 +29,7 @@ export default function RichTextEditor({ value, onChange }) {
     content: value || '',
     immediatelyRender: false,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      onChange(JSON.stringify(editor.getJSON()));
     },
   });
 

@@ -3,16 +3,31 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import DOMPurify from 'dompurify';
+import { generateHTML } from '@tiptap/core';
+import StarterKit from '@tiptap/starter-kit';
+import Image from '@tiptap/extension-image';
 import RichTextEditor from './editor';
 import { useAuth } from '../AuthContext';
 import './add-post.css';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+function contentToHtml(jsonString) {
+  if (!jsonString) return '';
+  try {
+    return generateHTML(JSON.parse(jsonString), [StarterKit, Image]);
+  } catch {
+    return '';
+  }
+}
 
 export default function AddPost() {
   const { user } = useAuth();
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user === null) {
@@ -24,12 +39,35 @@ export default function AddPost() {
     return null;
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Post submitted:\nTitle: ${title}\nContent length: ${content.length} chars\n\nImages are embedded in the content.`);
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${API_URL}/api/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ title, content, imageUrl: null, categoryIds: [] }),
+      });
+
+      if (!res.ok) {
+        setError('Failed to publish post. Please try again.');
+        return;
+      }
+
+      router.push('/');
+    } catch {
+      setError('Could not connect to server. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const sanitizedContent = typeof window !== 'undefined' ? DOMPurify.sanitize(content) : content;
+  const previewHtml = contentToHtml(content);
 
   return (
     <div className="add-post-container">
@@ -67,10 +105,10 @@ export default function AddPost() {
               <h3>Preview</h3>
               <div className="preview-content">
                 {title && <h2 className="preview-title">{title}</h2>}
-                {content ? (
+                {previewHtml ? (
                   <div
                     className="preview-text"
-                    dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+                    dangerouslySetInnerHTML={{ __html: previewHtml }}
                   />
                 ) : (
                   <p className="preview-placeholder">Your post preview will appear here...</p>
@@ -80,9 +118,11 @@ export default function AddPost() {
           </div>
         </div>
 
+        {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
+
         <div className="form-actions">
-          <button type="submit" className="btn btn-primary">
-            Publish Post
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'Publishing...' : 'Publish Post'}
           </button>
           <Link href="/profile" className="btn btn-secondary">
             Cancel

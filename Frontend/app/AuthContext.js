@@ -7,7 +7,6 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  // mock login state persisted in localStorage
   useEffect(() => {
     const stored = localStorage.getItem('textapp-user');
     if (stored) {
@@ -17,9 +16,9 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const login = (userInfo) => {
-    setUser(userInfo);
-    localStorage.setItem('textapp-user', JSON.stringify(userInfo));
+  const login = (authResponse) => {
+    setUser(authResponse);
+    localStorage.setItem('textapp-user', JSON.stringify(authResponse));
   };
 
   const logout = () => {
