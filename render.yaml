@@ -29,6 +29,17 @@ services:
       - key: Frontend__Url
         sync: false   # Set to your frontend Render URL after deploy
 
+  - type: web
+    name: postit-frontend
+    env: node
+    rootDir: ./Frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        sync: false   # Set to your Render API URL before first deploy (baked in at build time)
+
 databases:
   - name: postit-db
     databaseName: postit
