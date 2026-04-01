@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { generateHTML } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
+import { useAuth } from './AuthContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,11 +20,20 @@ function contentToHtml(jsonString) {
 }
 
 export default function Home() {
+  const { user, ready } = useAuth();
+  const router = useRouter();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (ready && !user) {
+      router.replace('/login');
+    }
+  }, [ready, user, router]);
+
+  useEffect(() => {
+    if (!ready || !user) return;
     fetch(`${API_URL}/api/posts`)
       .then((res) => {
         if (!res.ok) throw new Error();
@@ -31,8 +42,9 @@ export default function Home() {
       .then(setPosts)
       .catch(() => setError('Could not load posts.'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [ready, user]);
 
+  if (!ready || !user) return null;
   if (loading) return <p style={{ color: '#999' }}>Loading posts...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 

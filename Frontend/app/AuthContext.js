@@ -6,6 +6,7 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('textapp-user');
@@ -14,6 +15,7 @@ export function AuthProvider({ children }) {
         setUser(JSON.parse(stored));
       } catch {}
     }
+    setReady(true);
   }, []);
 
   const login = (authResponse) => {
@@ -27,7 +29,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, ready, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

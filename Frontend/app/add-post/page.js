@@ -22,7 +22,7 @@ function contentToHtml(jsonString) {
 }
 
 export default function AddPost() {
-  const { user } = useAuth();
+  const { user, ready } = useAuth();
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -30,12 +30,12 @@ export default function AddPost() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user === null) {
+    if (ready && !user) {
       router.replace('/login');
     }
-  }, [user, router]);
+  }, [ready, user, router]);
 
-  if (!user) {
+  if (!ready || !user) {
     return null;
   }
 
@@ -102,7 +102,7 @@ export default function AddPost() {
 
           <div className="preview-section">
             <div className="preview-panel">
-              <h3>Preview</h3>
+              <h3 className="preview-panel-title">Preview</h3>
               <div className="preview-content">
                 {title && <h2 className="preview-title">{title}</h2>}
                 {previewHtml ? (

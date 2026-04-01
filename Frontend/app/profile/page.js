@@ -6,16 +6,16 @@ import Link from 'next/link';
 import { useAuth } from '../AuthContext';
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, ready } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (user === null) {
+    if (ready && !user) {
       router.replace('/login');
     }
-  }, [user, router]);
+  }, [ready, user, router]);
 
-  if (!user) {
+  if (!ready || !user) {
     return null;
   }
 

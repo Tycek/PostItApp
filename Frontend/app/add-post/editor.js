@@ -3,12 +3,13 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import './editor.css';
 
 export default function RichTextEditor({ value, onChange }) {
   const fileInputRef = useRef(null);
-  
+  const [, forceUpdate] = useState(0);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -31,6 +32,8 @@ export default function RichTextEditor({ value, onChange }) {
     onUpdate: ({ editor }) => {
       onChange(JSON.stringify(editor.getJSON()));
     },
+    onSelectionUpdate: () => forceUpdate((n) => n + 1),
+    onTransaction: () => forceUpdate((n) => n + 1),
   });
 
   if (!editor) {

@@ -16,7 +16,7 @@ export default function NavBar() {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    router.push('/login');
   };
 
   return (
