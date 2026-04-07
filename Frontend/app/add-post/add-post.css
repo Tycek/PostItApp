@@ -158,6 +158,35 @@
   margin: 1rem 0;
 }
 
+.category-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.category-pick-btn {
+  background-color: white;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.category-pick-btn:hover {
+  border-color: #3498db;
+  color: #3498db;
+}
+
+.category-pick-btn.selected {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
 .preview-placeholder {
   color: #999;
   font-style: italic;

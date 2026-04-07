@@ -26,6 +26,8 @@ export default function AddPost() {
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -35,9 +37,23 @@ export default function AddPost() {
     }
   }, [ready, user, router]);
 
+  useEffect(() => {
+    if (!ready || !user) return;
+    fetch(`${API_URL}/api/categories`)
+      .then((r) => r.ok ? r.json() : [])
+      .then(setCategories)
+      .catch(() => {});
+  }, [ready, user]);
+
   if (!ready || !user) {
     return null;
   }
+
+  const toggleCategory = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,17 +67,17 @@ export default function AddPost() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.token}`,
         },
-        body: JSON.stringify({ title, content, imageUrl: null, categoryIds: [] }),
+        body: JSON.stringify({ title, content, imageUrl: null, categoryIds: selectedIds }),
       });
 
       if (!res.ok) {
-        setError('Failed to publish post. Please try again.');
+        setError('Příspěvek se nepodařilo publikovat. Zkuste to znovu.');
         return;
       }
 
       router.push('/');
     } catch {
-      setError('Could not connect to server. Please try again.');
+      setError('Nepodařilo se připojit k serveru. Zkuste to znovu.');
     } finally {
       setLoading(false);
     }
@@ -71,30 +87,48 @@ export default function AddPost() {
 
   return (
     <div className="add-post-container">
-      <h1 className="page-title">Create New Post</h1>
+      <h1 className="page-title">Vytvořit nový příspěvek</h1>
 
       <form onSubmit={handleSubmit} className="add-post-form">
         <div className="form-header">
           <div className="form-group title-group">
-            <label htmlFor="title">Post Title</label>
+            <label htmlFor="title">Nadpis příspěvku</label>
             <input
               id="title"
               type="text"
-              placeholder="Enter an engaging title for your post..."
+              placeholder="Zadejte poutavý nadpis pro váš příspěvek..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
               className="title-input"
             />
           </div>
+
+          {categories.length > 0 && (
+            <div className="form-group" style={{ marginBottom: 0, marginTop: '1.5rem' }}>
+              <label>Kategorie</label>
+              <div className="category-picker">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => toggleCategory(cat.id)}
+                    className={`category-pick-btn${selectedIds.includes(cat.id) ? ' selected' : ''}`}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="editor-preview-wrapper">
           <div className="editor-section">
             <div className="form-group">
-              <label htmlFor="content">Content</label>
+              <label htmlFor="content">Obsah</label>
               <p style={{ fontSize: '0.875rem', color: '#999', marginBottom: '0.5rem' }}>
-                Use the 🖼️ button in the toolbar to insert images directly into your text
+                Použijte tlačítko 🖼️ v panelu nástrojů pro vložení obrázků přímo do textu
               </p>
               <RichTextEditor value={content} onChange={setContent} />
             </div>
@@ -102,16 +136,25 @@ export default function AddPost() {
 
           <div className="preview-section">
             <div className="preview-panel">
-              <h3 className="preview-panel-title">Preview</h3>
+              <h3 className="preview-panel-title">Náhled</h3>
               <div className="preview-content">
                 {title && <h2 className="preview-title">{title}</h2>}
+                {selectedIds.length > 0 && (
+                  <div className="category-tags" style={{ marginBottom: '1rem' }}>
+                    {categories
+                      .filter((c) => selectedIds.includes(c.id))
+                      .map((c) => (
+                        <span key={c.id} className="category-tag">{c.name}</span>
+                      ))}
+                  </div>
+                )}
                 {previewHtml ? (
                   <div
                     className="preview-text"
                     dangerouslySetInnerHTML={{ __html: previewHtml }}
                   />
                 ) : (
-                  <p className="preview-placeholder">Your post preview will appear here...</p>
+                  <p className="preview-placeholder">Náhled vašeho příspěvku se zobrazí zde...</p>
                 )}
               </div>
             </div>
@@ -122,10 +165,10 @@ export default function AddPost() {
 
         <div className="form-actions">
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Publishing...' : 'Publish Post'}
+            {loading ? 'Publikování...' : 'Publikovat příspěvek'}
           </button>
-          <Link href="/profile" className="btn btn-secondary">
-            Cancel
+          <Link href="/" className="btn btn-secondary">
+            Zrušit
           </Link>
         </div>
       </form>

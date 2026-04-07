@@ -26,9 +26,9 @@ export default function Login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      console.log('Login response status:', res);
+
       if (!res.ok) {
-        setError('Invalid email or password.');
+        setError('Neplatný e-mail nebo heslo.');
         return;
       }
 
@@ -36,7 +36,7 @@ export default function Login() {
       login(data);
       router.push('/profile');
     } catch {
-      setError('Could not connect to server. Please try again.');
+      setError('Nepodařilo se připojit k serveru. Zkuste to znovu.');
     } finally {
       setLoading(false);
     }
@@ -45,15 +45,15 @@ export default function Login() {
   return (
     <div className="form-wrapper">
       <div className="card">
-        <h1 className="page-title">Login</h1>
+        <h1 className="page-title">Přihlášení</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+            <label htmlFor="email">E-mailová adresa</label>
             <input
               id="email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Zadejte váš e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -61,11 +61,11 @@ export default function Login() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Heslo</label>
             <input
               id="password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="Zadejte vaše heslo"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -75,12 +75,12 @@ export default function Login() {
           {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
 
           <button type="submit" className="btn" style={{ width: '100%' }} disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Přihlašování...' : 'Přihlásit se'}
           </button>
         </form>
 
         <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#666' }}>
-          Don't have an account? <Link href="/register" className="link">Register here</Link>
+          Nemáte účet? <Link href="/register" className="link">Zaregistrujte se</Link>
         </p>
       </div>
     </div>

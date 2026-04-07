@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '../AuthContext';
 
 export default function Profile() {
-  const { user, ready } = useAuth();
+  const { user, ready, logout } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -19,12 +19,17 @@ export default function Profile() {
     return null;
   }
 
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 className="page-title">My Profile</h1>
+        <h1 className="page-title">Můj profil</h1>
         <Link href="/add-post" className="btn">
-          + New Post
+          + Nový příspěvek
         </Link>
       </div>
 
@@ -44,71 +49,18 @@ export default function Profile() {
             👤
           </div>
           <div>
-            <h2 style={{ color: '#2c3e50', marginBottom: '0.5rem' }}>John Doe</h2>
-            <p style={{ color: '#666', marginBottom: '0.25rem' }}>john@example.com</p>
-            <p style={{ color: '#999', fontSize: '0.875rem' }}>Member since January 2026</p>
+            <h2 style={{ color: '#2c3e50', marginBottom: '0.5rem' }}>{user.displayName}</h2>
+            <p style={{ color: '#666', marginBottom: '0.25rem' }}>{user.email}</p>
           </div>
         </div>
 
-        <button className="btn btn-secondary" style={{ marginRight: '0.5rem' }}>
-          Edit Profile
-        </button>
-        <button className="btn btn-secondary">
-          Logout
+        <button className="btn btn-secondary" onClick={handleLogout}>
+          Odhlásit se
         </button>
       </div>
 
-      <h2 style={{ color: '#2c3e50', marginBottom: '1rem' }}>My Posts</h2>
-
-      <div style={{ display: 'grid', gap: '1.5rem' }}>
-        <div className="card">
-          <h3 style={{ color: '#2c3e50', marginBottom: '0.5rem' }}>My Summer in Paris</h3>
-          <p style={{ color: '#999', fontSize: '0.875rem', marginBottom: '1rem' }}>Posted on January 15, 2026</p>
-          <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '1rem' }}>
-            The most unforgettable summer of my life. From walking along the Seine at sunset to discovering hidden cafés in the Marais district, Paris captured my heart in ways I never expected. Every corner tells a story, and I'm still living in those memories...
-          </p>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button className="btn btn-secondary" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>
-              Edit
-            </button>
-            <button className="btn btn-secondary" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>
-              Delete
-            </button>
-          </div>
-        </div>
-
-        <div className="card">
-          <h3 style={{ color: '#2c3e50', marginBottom: '0.5rem' }}>The Day I Made a Life-Changing Decision</h3>
-          <p style={{ color: '#999', fontSize: '0.875rem', marginBottom: '1rem' }}>Posted on January 10, 2026</p>
-          <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '1rem' }}>
-            Leaving my job to follow my passion was terrifying. But looking back now, it's the best decision I've ever made. This is my story of courage, doubt, and ultimately finding my true path. Life is too short not to chase what makes your heart sing.
-          </p>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button className="btn btn-secondary" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>
-              Edit
-            </button>
-            <button className="btn btn-secondary" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>
-              Delete
-            </button>
-          </div>
-        </div>
-
-        <div className="card">
-          <h3 style={{ color: '#2c3e50', marginBottom: '0.5rem' }}>Lessons from My Grandmother</h3>
-          <p style={{ color: '#999', fontSize: '0.875rem', marginBottom: '1rem' }}>Posted on January 5, 2026</p>
-          <p style={{ color: '#666', lineHeight: '1.6', marginBottom: '1rem' }}>
-            She taught me that the simplest moments often hold the deepest meaning. Whether it was baking together in her kitchen or listening to her stories on the porch, those quiet times shaped who I am today. A beautiful reminder that life is measured in connections, not achievements.
-          </p>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button className="btn btn-secondary" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>
-              Edit
-            </button>
-            <button className="btn btn-secondary" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
+      <h2 style={{ color: '#2c3e50', marginBottom: '1rem' }}>Moje příspěvky</h2>
+      <p style={{ color: '#999' }}>Správa příspěvků bude brzy k dispozici.</p>
     </div>
   );
 }

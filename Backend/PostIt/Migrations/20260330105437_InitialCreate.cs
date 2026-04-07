@@ -335,14 +335,14 @@ namespace PostIt.Migrations
                 columns: new[] { "Id", "Name", "Slug" },
                 values: new object[,]
                 {
-                    { 1, "Art", "art" },
-                    { 2, "Technology", "technology" },
-                    { 3, "Science", "science" },
-                    { 4, "Gaming", "gaming" },
-                    { 5, "Music", "music" },
-                    { 6, "Sports", "sports" },
-                    { 7, "Travel", "travel" },
-                    { 8, "Food", "food" }
+                    { 1, "Umění", "art" },
+                    { 2, "Technologie", "technology" },
+                    { 3, "Věda", "science" },
+                    { 4, "Hry", "gaming" },
+                    { 5, "Hudba", "music" },
+                    { 6, "Sport", "sports" },
+                    { 7, "Cestování", "travel" },
+                    { 8, "Jídlo", "food" }
                 });
 
             migrationBuilder.CreateIndex(

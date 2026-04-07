@@ -46,7 +46,7 @@ export default function PostDetail({ params }) {
         setHasLiked(postData.isLikedByCurrentUser);
         setComments(commentsData);
       })
-      .catch(() => setError('Could not load post.'))
+      .catch(() => setError('Příspěvek se nepodařilo načíst.'))
       .finally(() => setLoading(false));
   }, [postId, user]);
 
@@ -85,13 +85,13 @@ export default function PostDetail({ params }) {
     setCommentLoading(false);
   };
 
-  if (loading) return <p style={{ color: '#999' }}>Loading...</p>;
+  if (loading) return <p style={{ color: '#999' }}>Načítání...</p>;
   if (error || !post) {
     return (
       <div className="form-wrapper">
         <div className="card">
-          <h1>Post not found</h1>
-          <Link href="/">← Back to home</Link>
+          <h1>Příspěvek nebyl nalezen</h1>
+          <Link href="/">← Zpět na hlavní stránku</Link>
         </div>
       </div>
     );
@@ -100,17 +100,24 @@ export default function PostDetail({ params }) {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>
       <Link href="/" style={{ color: '#3498db', textDecoration: 'none', marginBottom: '2rem', display: 'inline-block' }}>
-        ← Back to stories
+        ← Zpět na příspěvky
       </Link>
 
       <article className="card" style={{ marginBottom: '2rem' }}>
         <h1 style={{ color: '#2c3e50', marginBottom: '1rem', lineHeight: '1.4' }}>{post.title}</h1>
 
         <div style={{ borderBottom: '1px solid #ddd', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
-          <p style={{ color: '#666', marginBottom: '0.25rem' }}>By <strong>{post.authorDisplayName}</strong></p>
-          <p style={{ color: '#999', fontSize: '0.875rem' }}>
-            Posted on {new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+          <p style={{ color: '#666', marginBottom: '0.25rem' }}>Autor: <strong>{post.authorDisplayName}</strong></p>
+          <p style={{ color: '#999', fontSize: '0.875rem', marginBottom: post.categories?.length > 0 ? '0.75rem' : 0 }}>
+            Publikováno {new Date(post.createdAt).toLocaleDateString('cs-CZ', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
+          {post.categories?.length > 0 && (
+            <div className="category-tags">
+              {post.categories.map((name) => (
+                <span key={name} className="category-tag">{name}</span>
+              ))}
+            </div>
+          )}
         </div>
 
         <div
@@ -125,47 +132,47 @@ export default function PostDetail({ params }) {
             style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
             disabled={!user}
           >
-            {hasLiked ? '❤️' : '🤍'} {likeCount} {likeCount === 1 ? 'Like' : 'Likes'}
+            {hasLiked ? '❤️' : '🤍'} {likeCount} {likeCount === 1 ? 'To se mi líbí' : 'Líbí se mi to'}
           </button>
-          <span style={{ color: '#666' }}>💬 {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}</span>
+          <span style={{ color: '#666' }}>💬 {comments.length} {comments.length === 1 ? 'komentář' : comments.length >= 2 && comments.length <= 4 ? 'komentáře' : 'komentářů'}</span>
         </div>
       </article>
 
       <section className="card">
-        <h2 style={{ color: '#2c3e50', marginBottom: '1.5rem' }}>Comments ({comments.length})</h2>
+        <h2 style={{ color: '#2c3e50', marginBottom: '1.5rem' }}>Komentáře ({comments.length})</h2>
 
         {user ? (
           <form onSubmit={handleAddComment} style={{ marginBottom: '2rem', paddingBottom: '2rem', borderBottom: '1px solid #ddd' }}>
             <div className="form-group">
-              <label htmlFor="comment">Add a comment</label>
+              <label htmlFor="comment">Přidat komentář</label>
               <textarea
                 id="comment"
-                placeholder="Share your thoughts..."
+                placeholder="Napište svůj komentář..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 style={{ minHeight: '100px' }}
               />
             </div>
             <button type="submit" className="btn" disabled={!newComment.trim() || commentLoading}>
-              {commentLoading ? 'Posting...' : 'Post Comment'}
+              {commentLoading ? 'Odesílání...' : 'Odeslat komentář'}
             </button>
           </form>
         ) : (
           <div style={{ backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '6px', marginBottom: '2rem', textAlign: 'center', color: '#666' }}>
-            <p><Link href="/login" className="link">Log in</Link> to comment</p>
+            <p><Link href="/login" className="link">Přihlaste se</Link> pro přidání komentáře</p>
           </div>
         )}
 
         <div style={{ display: 'grid', gap: '1.5rem' }}>
           {comments.length === 0 ? (
-            <p style={{ color: '#999', fontStyle: 'italic' }}>No comments yet. Be the first to share your thoughts!</p>
+            <p style={{ color: '#999', fontStyle: 'italic' }}>Zatím žádné komentáře. Buďte první!</p>
           ) : (
             comments.map((comment) => (
               <div key={comment.id} style={{ paddingBottom: '1rem', borderBottom: '1px solid #eee' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                   <strong style={{ color: '#2c3e50' }}>{comment.authorDisplayName}</strong>
                   <span style={{ color: '#999', fontSize: '0.875rem' }}>
-                    {new Date(comment.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    {new Date(comment.createdAt).toLocaleDateString('cs-CZ', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </span>
                 </div>
                 <p style={{ color: '#555', lineHeight: '1.6' }}>{comment.content}</p>

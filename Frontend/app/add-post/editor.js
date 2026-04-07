@@ -62,7 +62,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={editor.isActive('bold') ? 'active' : ''}
           type="button"
-          title="Bold"
+          title="Tučně"
         >
           <strong>B</strong>
         </button>
@@ -70,7 +70,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={editor.isActive('italic') ? 'active' : ''}
           type="button"
-          title="Italic"
+          title="Kurzíva"
         >
           <em>I</em>
         </button>
@@ -78,7 +78,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={editor.isActive('strike') ? 'active' : ''}
           type="button"
-          title="Strike"
+          title="Přeškrtnutí"
         >
           <s>S</s>
         </button>
@@ -87,7 +87,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={editor.isActive('heading', { level: 1 }) ? 'active' : ''}
           type="button"
-          title="Heading 1"
+          title="Nadpis 1"
         >
           H1
         </button>
@@ -95,7 +95,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           className={editor.isActive('heading', { level: 2 }) ? 'active' : ''}
           type="button"
-          title="Heading 2"
+          title="Nadpis 2"
         >
           H2
         </button>
@@ -103,7 +103,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           className={editor.isActive('heading', { level: 3 }) ? 'active' : ''}
           type="button"
-          title="Heading 3"
+          title="Nadpis 3"
         >
           H3
         </button>
@@ -112,7 +112,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={editor.isActive('bulletList') ? 'active' : ''}
           type="button"
-          title="Bullet List"
+          title="Odrážkový seznam"
         >
           •
         </button>
@@ -120,7 +120,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={editor.isActive('orderedList') ? 'active' : ''}
           type="button"
-          title="Ordered List"
+          title="Číslovaný seznam"
         >
           1.
         </button>
@@ -129,7 +129,7 @@ export default function RichTextEditor({ value, onChange }) {
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           className={editor.isActive('codeBlock') ? 'active' : ''}
           type="button"
-          title="Code Block"
+          title="Blok kódu"
         >
           &lt;&gt;
         </button>
@@ -137,7 +137,7 @@ export default function RichTextEditor({ value, onChange }) {
         <button
           onClick={handleImageButtonClick}
           type="button"
-          title="Insert Image"
+          title="Vložit obrázek"
         >
           🖼️
         </button>

@@ -22,7 +22,7 @@ export default function Register() {
     setError('');
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError('Hesla se neshodují.');
       return;
     }
 
@@ -37,7 +37,7 @@ export default function Register() {
 
       if (!res.ok) {
         const data = await res.json().catch(() => null);
-        const message = data?.[0]?.description ?? 'Registration failed. Please try again.';
+        const message = data?.[0]?.description ?? 'Registrace se nezdařila. Zkuste to znovu.';
         setError(message);
         return;
       }
@@ -46,7 +46,7 @@ export default function Register() {
       login(data);
       router.push('/profile');
     } catch {
-      setError('Could not connect to server. Please try again.');
+      setError('Nepodařilo se připojit k serveru. Zkuste to znovu.');
     } finally {
       setLoading(false);
     }
@@ -55,15 +55,15 @@ export default function Register() {
   return (
     <div className="form-wrapper">
       <div className="card">
-        <h1 className="page-title">Create Account</h1>
+        <h1 className="page-title">Vytvořit účet</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="fullname">Full Name</label>
+            <label htmlFor="fullname">Celé jméno</label>
             <input
               id="fullname"
               type="text"
-              placeholder="Enter your full name"
+              placeholder="Zadejte vaše celé jméno"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               required
@@ -71,11 +71,11 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+            <label htmlFor="email">E-mailová adresa</label>
             <input
               id="email"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Zadejte váš e-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -83,11 +83,11 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Heslo</label>
             <input
               id="password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="Zadejte vaše heslo"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -95,11 +95,11 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirm-password">Confirm Password</label>
+            <label htmlFor="confirm-password">Potvrdit heslo</label>
             <input
               id="confirm-password"
               type="password"
-              placeholder="Confirm your password"
+              placeholder="Potvrďte vaše heslo"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -109,12 +109,12 @@ export default function Register() {
           {error && <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>}
 
           <button type="submit" className="btn" style={{ width: '100%' }} disabled={loading}>
-            {loading ? 'Creating account...' : 'Create Account'}
+            {loading ? 'Vytváření účtu...' : 'Vytvořit účet'}
           </button>
         </form>
 
         <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#666' }}>
-          Already have an account? <Link href="/login" className="link">Login here</Link>
+          Již máte účet? <Link href="/login" className="link">Přihlaste se</Link>
         </p>
       </div>
     </div>

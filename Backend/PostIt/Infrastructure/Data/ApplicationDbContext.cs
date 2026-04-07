@@ -47,14 +47,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         // Seed categories
         builder.Entity<Category>().HasData(
-            new Category { Id = 1, Name = "Art", Slug = "art" },
-            new Category { Id = 2, Name = "Technology", Slug = "technology" },
-            new Category { Id = 3, Name = "Science", Slug = "science" },
-            new Category { Id = 4, Name = "Gaming", Slug = "gaming" },
-            new Category { Id = 5, Name = "Music", Slug = "music" },
-            new Category { Id = 6, Name = "Sports", Slug = "sports" },
-            new Category { Id = 7, Name = "Travel", Slug = "travel" },
-            new Category { Id = 8, Name = "Food", Slug = "food" }
+            new Category { Id = 1, Name = "Umìní", Slug = "art" },
+            new Category { Id = 2, Name = "Technologie", Slug = "technology" },
+            new Category { Id = 3, Name = "Vìda", Slug = "science" },
+            new Category { Id = 4, Name = "Hry", Slug = "gaming" },
+            new Category { Id = 5, Name = "Hudba", Slug = "music" },
+            new Category { Id = 6, Name = "Sport", Slug = "sports" },
+            new Category { Id = 7, Name = "Cestování", Slug = "travel" },
+            new Category { Id = 8, Name = "Jídlo", Slug = "food" }
         );
 
         // Seed badges
